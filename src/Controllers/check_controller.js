@@ -9,7 +9,8 @@ function addNewCheck(req, res, next) {
   Check.create(req.body)
     .then(
       (check) => {
-        let addNewCheck = monitor.monitorurl(check);
+        console.log(monitor)
+        let addNewCheck = monitor.monitorurl(check,checkStatus);
         console.log("Check created", check);
 
         res.statusCode = 200;
@@ -22,8 +23,13 @@ function addNewCheck(req, res, next) {
 }
 
 function checkStatus(check, r) {
-  if (response.isAxiosError) {
-   
+  //console.log(check)
+ // console.log(r)
+  if (r.isAxiosError) {
+   console.log("down");
+  }
+  else{
+    console.log("up");
   }
 }
 

@@ -1,10 +1,9 @@
 const axios = require("axios").default;
-const checkController = require("./Controllers/check_controller");
 const checksMap = new Map();
 const https=require("https");
 
 
-function monitorurl(check){
+function monitorurl(check,cb){
   
   let URL = check.protocol + "://" + check.url;
   if (check.port!='') URL = URL + ":" + check.port;
@@ -16,7 +15,7 @@ function monitorurl(check){
     try {
       api.get().then((rest, err) => {
         if (err) return err;
-        console.log(check.name+" "+rest.isAxiosError);
+        cb(check,rest);
         return rest;
       });
     } catch (err) {
