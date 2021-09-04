@@ -35,7 +35,6 @@ opts.secretOrKey = secretKey;
 
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
     (jwt_payload, done) => {
-        console.log("JWT payload: ", jwt_payload);
         User.findOne({email: jwt_payload._id}, (err, user) => {
             if (err) {
                 return done(err, false);
