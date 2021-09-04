@@ -26,20 +26,22 @@ function addNewCheck(req, res, next) {
     .catch((err) => next(err));
 }
 
-function checkStatus(check, res, err) {
-  let URLstatus='Up';
-  if (res.isAxiosError || res.duration >= check.timeout) 
-    URLstatus='Down'
-  
-  if (check.webhook!=""){
-  axios
-    .post(check.webhook, {
+async function checkStatus(check, res, err) {
+  let URLstatus = "Up";
+  if (res.isAxiosError || res.duration >= check.timeout) URLstatus = "Down";
+
+  if (check.webhook != "") {
+    axios.post(check.webhook, {
       CheckName: check.name,
       URLstatus: URLstatus,
       ResponseTime: res.duration,
-    })
+    });
   }
-  console.log(check.name+" "+URLstatus);
+
+  let user = await User.findById(check.createdby);
+  mailSender.SendStatusMail(check, URLstatus, user.email);
+
+  console.log(check.name + " " + URLstatus);
 }
 
 module.exports = { addNewCheck };
