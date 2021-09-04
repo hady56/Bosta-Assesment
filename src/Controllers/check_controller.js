@@ -2,7 +2,7 @@ const User = require("../Models/user");
 const Check = require("../Models/check");
 const mailSender = require("../mail_sender");
 const monitor = require("../up_time_monitor");
-
+const axios = require("axios").default;
 //endpoints
 function addNewCheck(req, res, next) {
   Check.create(req.body)
@@ -27,13 +27,19 @@ function addNewCheck(req, res, next) {
 }
 
 function checkStatus(check, res, err) {
+  let URLstatus='Up';
+  if (res.isAxiosError || res.duration >= check.timeout) 
+    URLstatus='Down'
   
-    if (res.isAxiosError) {
-      console.log("down");
-    } else {
-      console.log("up");
-    }
-  
+  if (check.webhook!=""){
+  axios
+    .post(check.webhook, {
+      CheckName: check.name,
+      URLstatus: URLstatus,
+      ResponseTime: res.duration,
+    })
+  }
+  console.log(check.name+" "+URLstatus);
 }
 
-module.exports = { addNewCheck, checkStatus };
+module.exports = { addNewCheck };

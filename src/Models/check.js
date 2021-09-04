@@ -29,11 +29,11 @@ const checkSchema = new Schema(
     },
     timeout: {
       type: Number,
-      default: 500,
+      default: 5000,
     },
     interval: {
       type: Number,
-      default: 5000,
+      default: 600000,
     },
     threshold: {
       type: Number,
